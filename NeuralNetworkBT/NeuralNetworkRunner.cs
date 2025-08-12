@@ -1,4 +1,6 @@
-﻿namespace NeuralNetworkBT;
+﻿using System.Globalization;
+
+namespace NeuralNetworkBT;
 
 using System;
 using System.IO;
@@ -134,13 +136,25 @@ public static class NeuralNetworkRunner
         }
 
         var inputValues = new double[config.Input.Count];
-        for (int i = 0; i < config.Input.Count; i++)
+        for (int j = 0; j< config.Input.Count; j++)
         {
-            if (!double.TryParse(inputStrs[i], out inputValues[i]))
+           
+            if (!double.TryParse(inputStrs[j], out inputValues[j]))
             {
                 Console.WriteLine("Geçersiz sayı.");
                 return;
             }
+            for (int i = 0; i < inputStrs.Length; i++)
+            {
+                string normalized = inputStrs[i].Replace(',', '.');
+
+                if (!double.TryParse(normalized, NumberStyles.Any, CultureInfo.InvariantCulture, out inputValues[i]))
+                {
+                    Console.WriteLine($"Geçersiz sayı: {inputStrs[i]}");
+                    return;
+                }
+            }
+
         }
 
         var normInput = ApplyMinMax(inputValues, inMin, inMax);
