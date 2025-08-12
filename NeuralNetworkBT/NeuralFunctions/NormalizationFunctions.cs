@@ -5,13 +5,12 @@ using System.Linq;
 
 public static class NormalizationFunctions
 {
-    public static double[] MinMax(double[] values, double newMin = 0, double newMax = 1)
+    public static double[] MinMax(double[] values)
     {
         double min = values.Min();
         double max = values.Max();
-        double range = max - min;
-        if (range == 0) return values.Select(v => newMin).ToArray();
-        return values.Select(v => ((v - min) / range) * (newMax - newMin) + newMin).ToArray();
+        if (max == min) return values.Select(_ => 0.5).ToArray();
+        return values.Select(v => (v - min) / (max - min)).ToArray();
     }
 
     public static double[] ZScore(double[] values)

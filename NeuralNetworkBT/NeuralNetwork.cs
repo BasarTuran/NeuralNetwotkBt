@@ -22,7 +22,15 @@ public class NeuralNetwork
     private List<double[]> vBiases;
 
     private int t; // Adam için timestep
+    public List<double[,]> GetWeights()
+    {
+        return this.Weights; // weights internal alanınız
+    }
 
+    public List<double[]> GetBiases()
+    {
+        return this.Biases; // biases internal alanınız
+    }
     public NeuralNetwork(NeuralNetworkConfig config)
     {
         _config = config;
