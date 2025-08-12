@@ -2,7 +2,7 @@
 
 using System.Text.Json;
 using NeuralNetworkBT;
-
+Main();
 static void Main()
     {
         Console.WriteLine("Yapay Sinir Ağı Uygulamasına Hoşgeldiniz.");
@@ -32,10 +32,11 @@ static void Main()
         if (choice == "1")
         {
             var trainingJson = File.ReadAllText(config.TrainingDataFile);
+         
             var trainingData = JsonSerializer.Deserialize<TrainingData[]>(trainingJson);
 
             double[][] inputs = trainingData.Select(td => normalizer(td.Input)).ToArray();
-            double[][] outputs = trainingData.Select(td => td.Output).ToArray();
+            double[][] outputs = trainingData.Select(td => normalizer(td.Output)).ToArray();
 
             nn.Train(inputs, outputs);
             ModelStorage.Save(config.ModelFile,nn.GetWeights(),nn.GetBiases());

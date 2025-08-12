@@ -133,7 +133,8 @@ public class NeuralNetwork
     private List<double[]> Backpropagate(List<double[]> layerOutputs, double[] target)
     {
         int L = Weights.Count;
-        var deltas = new List<double[]>(new double[L][]);
+        var deltas = new List<double[]>(L);
+        for (int i = 0; i < L; i++) deltas.Add(null);
 
         var output = layerOutputs.Last();
 
@@ -159,7 +160,7 @@ public class NeuralNetwork
 
         for (int layer = L - 2; layer >= 0; layer--)
         {
-            int size = Weights[layer].GetLength(1);
+            int size = Weights[layer].GetLength(0); // nöron sayısı
             double[] delta = new double[size];
 
             Parallel.For(0, size, i =>
@@ -175,7 +176,6 @@ public class NeuralNetwork
 
             deltas[layer] = delta;
         }
-
         return deltas;
     }
 
@@ -252,8 +252,8 @@ public class NeuralNetwork
             }
 
             totalLoss /= inputs.Length;
-
-            Console.WriteLine($"Epoch {epoch + 1}/{_config.Epochs} - Loss: {totalLoss:F6}");
+            if(epoch%1000 == 0)
+                Console.WriteLine($"Epoch {epoch }/{_config.Epochs} - Loss: {totalLoss:F6}");
 
             if (totalLoss < bestLoss)
             {
@@ -264,9 +264,9 @@ public class NeuralNetwork
             else
             {
                 noImprovementEpochs++;
-                if (noImprovementEpochs >= _config.EarlyStoppingPatience)
+                if (noImprovementEpochs >= _config.EarlyStoppingPatience && _config.EarlyStoppingPatience>0)
                 {
-                    Console.WriteLine("Early stopping triggered.");
+                    Console.WriteLine("Early stopping triggered."+_config.EarlyStoppingPatience);
                     break;
                 }
             }

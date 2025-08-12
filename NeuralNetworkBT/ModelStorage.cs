@@ -11,7 +11,7 @@ public static class ModelStorage
     {
         var model = new
         {
-            Weights = weights,
+            Weights = weights.Select(matrix => ConvertToJagged(matrix)).ToList(),
             Biases = biases
         };
         var options = new JsonSerializerOptions { WriteIndented = true };
@@ -60,5 +60,21 @@ public static class ModelStorage
         }
 
         return (weights, biases);
+    }
+    public static List<double[]> ConvertToJagged(double[,] array2D)
+    {
+        int rows = array2D.GetLength(0);
+        int cols = array2D.GetLength(1);
+        var jagged = new List<double[]>(rows);
+        for (int i = 0; i < rows; i++)
+        {
+            var row = new double[cols];
+            for (int j = 0; j < cols; j++)
+            {
+                row[j] = array2D[i, j];
+            }
+            jagged.Add(row);
+        }
+        return jagged;
     }
 }
