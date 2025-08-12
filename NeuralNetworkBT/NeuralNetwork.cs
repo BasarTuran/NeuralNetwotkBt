@@ -222,6 +222,7 @@ public class NeuralNetwork
 
     public void Train(double[][] inputs, double[][] targets)
     {
+        ModelStorage.PrintWeights(Weights);
         int noImprovementEpochs = 0;
         double bestLoss = double.MaxValue;
 
